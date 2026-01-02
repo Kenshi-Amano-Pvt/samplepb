@@ -1,0 +1,67 @@
+syntax = "proto3";
+option go_package = "/pb";
+
+import "proto/error.proto";
+import "proto/models.proto";
+
+import "google/protobuf/timestamp.proto";
+
+package proto;
+
+// 更新の種類
+enum CRUD {
+  UNKNOWN = 0;
+  INSERT = 1;
+  UPDATE = 2;
+  DELETE = 3;
+}
+
+//*****************************************
+// 商品カテゴリ更新用param型とResult型の定義
+//*****************************************
+//  商品カテゴリ更新Param型
+message CategoryUpParam {
+  CRUD crud = 1;
+  string id = 2;
+  string name = 3;
+}
+
+//  商品更新Param型
+message ProductUpParam {
+  CRUD crud = 1;
+  string id = 2;
+  string name = 3;
+  int32 price = 4;
+  string categoryId = 5;
+}
+
+//  商品カテゴリ更新Result型
+message CategoryUpResult {
+  Category category = 1;
+  Error error = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+//  商品更新Result型
+message ProductUpResult {
+  Product product = 1;
+  Error error = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+//*****************************************
+// 商品カテゴリと商品の更新サービス型の定義
+//*****************************************
+//  商品カテゴリ更新サービス型
+service CategoryCommand {
+  rpc Create(CategoryUpParam) returns (CategoryUpResult);
+  rpc Update(CategoryUpParam) returns (CategoryUpResult);
+  rpc Delete(CategoryUpParam) returns (CategoryUpResult);
+}
+
+//  商品更新サービス型
+service ProductCommand {
+  rpc Create(ProductUpParam) returns (ProductUpResult);
+  rpc Update(ProductUpParam) returns (ProductUpResult);
+  rpc Delete(ProductUpParam) returns (ProductUpResult);
+}
